@@ -5,6 +5,7 @@
  */
 
 import {LitElement, html, css} from 'lit';
+import { initRouter } from './routes.js';
 
 /**
  * An example element.
@@ -45,6 +46,10 @@ export class MyElement extends LitElement {
     super();
     this.name = 'World';
     this.count = 0;
+  }
+
+  firstUpdated() {
+    initRouter(this.shadowRoot);
   }
 
   render() {
