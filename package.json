@@ -15,6 +15,7 @@
     "serve": "wds --watch",
     "serve:prod": "MODE=prod npm run serve",
     "test": "npm run test:dev && npm run test:prod",
+    "test:coverage": "MODE=prod wtr --coverage",
     "test:dev": "wtr",
     "test:watch": "wtr --watch",
     "test:prod": "MODE=prod wtr",
@@ -55,7 +56,8 @@
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "rollup": "^4.18.0",
-    "rollup-plugin-summary": "^2.0.1"
+    "rollup-plugin-summary": "^2.0.1",
+    "sinon": "^21.0.0"
   },
   "customElements": "custom-elements.json"
 }

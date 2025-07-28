@@ -150,8 +150,8 @@ export class EmployeeList extends LitElement {
                     <td>${emp.department}</td>
                     <td>${emp.position}</td>
                     <td>
-                      <button @click=${() => Router.go(`/edit/${emp.id}`)}>✎</button>
-                      <button @click=${() => this._delete(emp.id)}>🗑</button>
+                      <button aria-label="edit" @click=${() => Router.go(`/edit/${emp.id}`)}>✎</button>
+                      <button aria-label="delete" @click=${() => this._delete(emp.id)}>🗑</button>
                     </td>
                   </tr>
                 `)}
@@ -171,15 +171,15 @@ export class EmployeeList extends LitElement {
                 <div><strong>${t('form').department}:</strong> ${emp.department}</div>
                 <div><strong>${t('form').position}:</strong> ${emp.position}</div>
                 <div class="actions">
-                  <button class="edit" @click=${() => Router.go(`/edit/${emp.id}`)}>✎ ${t('edit')}</button>
-                  <button class="delete" @click=${() => this._delete(emp.id)}>🗑 ${t('delete')}</button>
+                  <button aria-label="edit" class="edit" @click=${() => Router.go(`/edit/${emp.id}`)}>✎ ${t('edit')}</button>
+                  <button aria-label="delete" class="delete" @click=${() => this._delete(emp.id)}>🗑 ${t('delete')}</button>
                 </div>
               </div>
               `)}
             </div>
           `}
 
-      <div style="margin-top:16px; display:flex; justify-content:center; align-items:center; gap:8px;">
+      <div class="pagination" style="margin-top:16px; display:flex; justify-content:center; align-items:center; gap:8px;">
         <button @click=${this._prev} ?disabled=${this.page === 1}>${t('prev')}</button>
         <span>${this.page} / ${Math.ceil((this.employees || []).length / this.perPage)}</span>
         <button

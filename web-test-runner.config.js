@@ -87,7 +87,7 @@ try {
 // https://modern-web.dev/docs/test-runner/cli-and-configuration/
 export default {
   rootDir: '.',
-  files: ['./test/**/*_test.js'],
+  files: ['./test/setup.js', './test/*.test.js'],
   nodeResolve: {exportConditions: mode === 'dev' ? ['development'] : []},
   preserveSymlinks: true,
   browsers: commandLineBrowsers ?? Object.values(browsers),
@@ -97,6 +97,18 @@ export default {
       ui: 'tdd',
       timeout: '60000',
     },
+  },
+  coverage: true,
+  coverageConfig: {
+    reporters: ['html', 'text', 'lcov'],
+    thresholds: {
+      statements: 85,
+      branches: 85,
+      functions: 85,
+      lines: 85,
+    },
+    include: ['*.js', 'views/**/*.js'],
+    exclude: ['test/**', 'node_modules/**'],
   },
   plugins: [
     // Detect browsers without modules (e.g. IE11) and transform to SystemJS

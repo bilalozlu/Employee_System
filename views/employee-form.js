@@ -136,6 +136,7 @@ export class EmployeeForm extends LitElement {
 
   _cancel() {
     Router.go('/');
+    history.pushState({}, '', '/');
   }
 
   render() {

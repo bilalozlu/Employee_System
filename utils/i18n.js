@@ -24,7 +24,7 @@ const messages = {
       }
     },
     tr: {
-      list:      'Çalılsan Listesi',
+      list:      'Çalışan Listesi',
       delConfirm:'Seçili çalışan silinecektir',
       headers: [
         'Ad','Soyad','İşe Giriş Tarihi','Doğum Tarihi',

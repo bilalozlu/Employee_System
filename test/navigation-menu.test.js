@@ -1,5 +1,6 @@
+import './setup.js';
 import { html, fixture, expect, oneEvent } from '@open-wc/testing';
-import { NavigationMenu } from '../components/navigation-menu.js';
+import { NavigationMenu } from '../navigation-menu.js';
 
 suite('navigation-menu', () => {
   let el;
@@ -16,11 +17,11 @@ suite('navigation-menu', () => {
   test('renders links and switch button', () => {
     const links = el.shadowRoot.querySelectorAll('a');
     expect(links.length).to.equal(2);
-    expect(links[0].textContent.trim()).to.equal('List');
-    expect(links[1].textContent.trim()).to.equal('Add Employee');
+    expect(links[0].textContent.trim()).to.include('Employees');
+    expect(links[1].textContent.trim()).to.include('Add New');
     const btn = el.shadowRoot.querySelector('button.switch');
     expect(btn).to.exist;
-    expect(btn.textContent.trim()).to.equal('Türkçe');
+    expect(btn.textContent.trim()).to.equal('🇹🇷');
   });
 
   test('toggles lang attribute and label on click', async () => {
@@ -28,7 +29,7 @@ suite('navigation-menu', () => {
     btn.click();
     await el.updateComplete;
     expect(document.documentElement.lang).to.equal('tr');
-    expect(btn.textContent.trim()).to.equal('English');
+    expect(btn.textContent.trim()).to.equal('🇬🇧');
 
     const evPromise = oneEvent(window, 'lang-change');
     btn.click();

@@ -1,5 +1,1 @@
-window.process = {
-    env: {
-      NODE_ENV: 'test'
-    }
-  };
+globalThis.process = { env: { NODE_ENV: 'test' } };

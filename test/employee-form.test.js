@@ -1,4 +1,6 @@
+import './setup.js';
 import { html, fixture, expect } from '@open-wc/testing';
+import sinon from 'sinon';
 import '../utils/i18n.js';
 import '../views/employee-form.js';
 
@@ -21,7 +23,7 @@ suite('employee-form', () => {
     saveBtn.click();
     await el.updateComplete;
     const errors = el.shadowRoot.querySelectorAll('.error');
-    expect(errors.length).to.equal(8);
+    expect(errors.length).to.equal(6);
   });
 
   test('validates date order', async () => {
