@@ -1,11 +1,13 @@
 const messages = {
     en: {
-      list:      'List',
-      delConfirm:'Are you sure you want to delete this employee?',
+      list:      'Employee List',
+      delConfirm:'Selected Employee record will be deleted',
       headers: [
         'First Name','Last Name','Date of Employment','Date of Birth',
         'Phone','Email','Department','Position','Actions'
       ],
+      delete: 'Delete',
+      edit: 'Edit',
       form: {
         firstName:       'First Name',
         lastName:        'Last Name',
@@ -16,15 +18,20 @@ const messages = {
         department:      'Department',
         position:        'Position',
         save:            'Save',
+        cancel:          'Cancel',
+        required: 'is required',
+        validDate: ' must be after '
       }
     },
     tr: {
-      list:      'Liste',
-      delConfirm:'Bu çalışanı silmek istediğinize emin misiniz?',
+      list:      'Çalılsan Listesi',
+      delConfirm:'Seçili çalışan silinecektir',
       headers: [
         'Ad','Soyad','İşe Giriş Tarihi','Doğum Tarihi',
         'Telefon','E-posta','Bölüm','Pozisyon','İşlemler'
       ],
+      delete: 'Sil',
+      edit: 'Düzenle',
       form: {
         firstName:       'Ad',
         lastName:        'Soyad',
@@ -35,6 +42,9 @@ const messages = {
         department:      'Bölüm',
         position:        'İşlemler',
         save:            'Kaydet',
+        cancel:          'İptal',
+        required: 'zorunlu alandır',
+        validDate: ' daha sonra olmalıdır: '
       }
     }
   };

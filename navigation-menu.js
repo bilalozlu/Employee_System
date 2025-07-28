@@ -3,14 +3,14 @@ import { Router } from '@vaadin/router';
 
 const translations = {
   en: {
-    list: 'Employee List',
-    add: 'Add Employee',
-    switchTo: 'Türkçe',
+    list: ' 👨‍💼 Employees',
+    add: ' + Add New',
+    switchTo: '🇹🇷',
   },
   tr: {
-    list: 'Çalışan Listesi',
-    add: 'Çalışan Ekle',
-    switchTo: 'English',
+    list: ' 👨‍💼 Çalışanlar',
+    add: ' + Yeni Ekle',
+    switchTo: '🇬🇧',
   }
 };
 
@@ -21,10 +21,11 @@ export class NavigationMenu extends LitElement {
 
   static styles = css`
     :host { display: block; background: #f5f5f5; padding: 8px 16px; }
-    nav { display: flex; gap: 16px; align-items: center; }
-    a { text-decoration: none; color: #333; font-weight: 500; }
-    a.active { color: #007acc; }
-    button.switch { margin-left: auto; padding: 4px 8px; }
+    nav { display: flex; gap: 24px; align-items: center; justify-content: flex-end; }
+    span { margin-right: auto; display: flex; align-items: center;}
+    img { width: 20px; margin-right: 20px}
+    a { text-decoration: none; color: #ff7f50; font-weight: 500; }
+    button.switch { padding: 4px; border:none; background:transparent; font-size:24px; cursor:pointer; }
   `;
 
   constructor() {
@@ -43,7 +44,7 @@ export class NavigationMenu extends LitElement {
   _toggleLang() {
     this.lang = this.lang === 'en' ? 'tr' : 'en';
     document.documentElement.lang = this.lang;
-    window.dispatchEvent(new CustomEvent('lang-changed', { detail: { lang: this.lang } }));
+    window.dispatchEvent(new CustomEvent('lang-change', { detail: { lang: this.lang } }));
   }
 
   _navigate(e) {
@@ -55,6 +56,9 @@ export class NavigationMenu extends LitElement {
     const path = window.location.pathname;
     return html`
       <nav>
+        <span>
+          <img src="./logo.png"> ING
+        </span>
         <a
           href="/"
           @click=${this._navigate}

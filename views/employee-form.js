@@ -1,5 +1,3 @@
-// src/views/employee-form.js
-
 import { LitElement, html, css } from 'lit';
 import { store, addEmployee, updateEmployee } from '../store.js';
 import { Router } from '@vaadin/router';
@@ -7,14 +5,66 @@ import { t } from '../utils/i18n.js';
 
 export class EmployeeForm extends LitElement {
   static styles = css`
-    form { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
-    label { display: flex; flex-direction: column; font-weight: 500; }
-    input, select, button { padding: 8px; font-size: 1rem; }
-    button { width: fit-content; align-self: start; }
+    form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    @media (max-width: 980px) {
+      form { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      form { grid-template-columns: 1fr; }
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      font-weight: 500;
+    }
+    input, select {
+      padding: 8px;
+      font-size: 1rem;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .error {
+      color: #b00020;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .save {
+      background-color: #ff7f50;
+      font-size: 16px;
+      color: white;
+      padding: 6px 24px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    .cancel {
+      background-color: white;
+      font-size: 16px;
+      color: blue;
+      padding: 6px 24px;
+      border-radius: 6px;
+      border: 1px solid blue;
+      cursor: pointer;
+    }
   `;
 
   static properties = {
-    employee: { type: Object }
+    employee: { type: Object },
+    _errors:  { state: true }
   };
 
   constructor() {
@@ -30,13 +80,12 @@ export class EmployeeForm extends LitElement {
       department: 'Analytics',
       position: 'Junior'
     };
+    this._errors = {};
   }
 
   firstUpdated() {
-    // re-render on language change
-    window.addEventListener('lang-changed', () => this.requestUpdate());
+    window.addEventListener('lang-change', () => this.requestUpdate());
 
-    // if editing, load existing employee
     const match = window.location.pathname.match(/\/edit\/([^/]+)$/);
     if (match) {
       const emp = store.getState().list.find(e => e.id === match[1]);
@@ -44,7 +93,37 @@ export class EmployeeForm extends LitElement {
     }
   }
 
-  _save() {
+  _validate() {
+    const errors = {};
+    const F = t('form');
+  
+    ['firstName','lastName','employmentDate','birthDate','phone','email','department','position']
+      .forEach(field => {
+        if (!this.employee[field] || this.employee[field].toString().trim() === '') {
+          errors[field] = `${F[field]} ${F.required}`;
+        }
+      });
+  
+    const { employmentDate, birthDate } = this.employee;
+    if (employmentDate && birthDate) {
+      const empDt = new Date(employmentDate);
+      const birthDt = new Date(birthDate);
+      if (empDt <= birthDt) {
+        errors.employmentDate = F.employmentDate + F.validDate + F.birthDate;
+      }
+    }
+  
+    this._errors = errors;
+    return Object.keys(errors).length === 0;
+  }
+
+  _save(e) {
+    if (!this._validate()) {
+      const firstErr = Object.keys(this._errors)[0];
+      this.shadowRoot.querySelector(`[name="${firstErr}"]`)?.focus();
+      return;
+    }
+
     const emp = { ...this.employee };
     if (emp.id) {
       store.dispatch(updateEmployee(emp));
@@ -55,80 +134,46 @@ export class EmployeeForm extends LitElement {
     Router.go('/');
   }
 
+  _cancel() {
+    Router.go('/');
+  }
+
   render() {
     const F = t('form');
     return html`
       <form @submit=${e => { e.preventDefault(); this._save(); }}>
-        <label>
-          ${F.firstName}
-          <input
-            type="text"
-            .value=${this.employee.firstName}
-            @input=${e => this.employee.firstName = e.target.value}>
-        </label>
+      ${['firstName','lastName','employmentDate','birthDate','phone','email','department','position'].map(field => html`
+      <label>
+        ${F[field]}
+        ${field === 'department' || field === 'position'
+          ? html`
+            <select
+              name=${field}
+              .value=${this.employee[field]}
+              @change=${e => this.employee[field] = e.target.value}>
+              ${field === 'department'
+                ? html`<option>Analytics</option><option>Tech</option>`
+                : html`<option>Junior</option><option>Medior</option><option>Senior</option>`}
+            </select>`
+          : html`
+            <input
+              name=${field}
+              type=${['employmentDate','birthDate'].includes(field) ? 'date'
+                : field === 'phone' ? 'tel'
+                : field === 'email' ? 'email'
+                : 'text'}
+              .value=${this.employee[field]}
+              @input=${e => this.employee[field] = e.target.value}>`}
+        ${this._errors[field]
+          ? html`<div class="error">${this._errors[field]}</div>`
+          : ''}
+      </label>
+    `)}
 
-        <label>
-          ${F.lastName}
-          <input
-            type="text"
-            .value=${this.employee.lastName}
-            @input=${e => this.employee.lastName = e.target.value}>
-        </label>
-
-        <label>
-          ${F.employmentDate}
-          <input
-            type="date"
-            .value=${this.employee.employmentDate}
-            @input=${e => this.employee.employmentDate = e.target.value}>
-        </label>
-
-        <label>
-          ${F.birthDate}
-          <input
-            type="date"
-            .value=${this.employee.birthDate}
-            @input=${e => this.employee.birthDate = e.target.value}>
-        </label>
-
-        <label>
-          ${F.phone}
-          <input
-            type="tel"
-            .value=${this.employee.phone}
-            @input=${e => this.employee.phone = e.target.value}>
-        </label>
-
-        <label>
-          ${F.email}
-          <input
-            type="email"
-            .value=${this.employee.email}
-            @input=${e => this.employee.email = e.target.value}>
-        </label>
-
-        <label>
-          ${F.department}
-          <select
-            .value=${this.employee.department}
-            @change=${e => this.employee.department = e.target.value}>
-            <option>Analytics</option>
-            <option>Tech</option>
-          </select>
-        </label>
-
-        <label>
-          ${F.position}
-          <select
-            .value=${this.employee.position}
-            @change=${e => this.employee.position = e.target.value}>
-            <option>Junior</option>
-            <option>Medior</option>
-            <option>Senior</option>
-          </select>
-        </label>
-
-        <button type="submit">${F.save}</button>
+        <div class="actions">
+          <button type="submit" class="save">${F.save}</button>
+          <button type="button" class="cancel" @click=${this._cancel}>${F.cancel}</button>
+        </div>
       </form>
     `;
   }

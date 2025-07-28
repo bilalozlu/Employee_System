@@ -6,17 +6,14 @@ import { t } from '../utils/i18n.js';
 export class EmployeeList extends LitElement {
   static styles = css`
     :host { display: block; padding: 16px; box-sizing: border-box; }
-    header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-    header h2 { margin: 0; }
-    .view-toggle { display: flex; gap: 8px; margin-left: 24px; }
-    .view-toggle button { padding: 4px 8px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    header h2 { margin: 0; color: #ff7f50; }
+    .view-toggle { display: flex; gap: 8px; }
+    .view-toggle button { padding: 4px; }
 
     table { width: 100%; border-collapse: collapse; table-layout: auto; }
-    th, td { padding: 8px; border-bottom: 1px solid #ccc; text-align: left; }
-    th:nth-of-type(3), td:nth-of-type(3), /* employmentDate */
-    th:nth-of-type(4), td:nth-of-type(4) /* birthDate */ {
-      /* visible by default */
-    }
+    th { color: #ff7f50;}
+    th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: center; }
 
     @media (max-width: 980px) {
       th:nth-of-type(3),
@@ -48,10 +45,21 @@ export class EmployeeList extends LitElement {
       }
     }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 16px; }
-    .card { border: 1px solid #ccc; padding: 12px; border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 
-    button { padding: 4px 8px; margin: 0 2px; }
+    @media (max-width: 750px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card { border: 1px solid #ccc; padding: 12px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; flex-direction: column; gap: 12px; align-items: start;}
+    .card .actions { grid-column: 1 / -1; margin-top: 8px; display: flex; justify-content: flex-start; gap: 8px; font-size: 16px;}
+    .card .actions .edit{ background-color: blue; font-size: 16px; color: white; padding: 6px; border-radius:3px}
+    .card .actions .delete{ background-color: #ff7f50; font-size: 16px; color: white; padding:6px; border-radius:3px}
+    button { padding: 4px; font-size: 24px; border:none; background: transparent; cursor: pointer; color: #ff7f50;}
+    button:disabled { cursor: default; opacity: 0.5}
+
   `;
 
   static properties = {
@@ -99,7 +107,7 @@ export class EmployeeList extends LitElement {
   }
 
   firstUpdated() {
-    window.addEventListener('lang-changed', () => this.requestUpdate());
+    window.addEventListener('lang-change', () => this.requestUpdate());
   }
 
   render() {
@@ -109,20 +117,18 @@ export class EmployeeList extends LitElement {
 
     return html`
       <header>
-        <div style="display:flex; align-items:center;">
-          <h2>${t('list')}</h2>
-          <div class="view-toggle">
-            <button
-              ?disabled=${this.viewMode === 'table'}
-              @click=${() => this._toggleView('table')}>
-              📋 Table
-            </button>
-            <button
-              ?disabled=${this.viewMode === 'grid'}
-              @click=${() => this._toggleView('grid')}>
-              📦 Grid
-            </button>
-          </div>
+        <h2>${t('list')}</h2>
+        <div class="view-toggle">
+          <button
+            ?disabled=${this.viewMode === 'table'}
+            @click=${() => this._toggleView('table')}>
+            ☰
+          </button>
+          <button
+            ?disabled=${this.viewMode === 'grid'}
+            @click=${() => this._toggleView('grid')}>
+            ▦
+          </button>
         </div>
       </header>
 
@@ -155,15 +161,20 @@ export class EmployeeList extends LitElement {
         : html`
             <div class="grid">
               ${pageItems.map(emp => html`
-                <div class="card">
-                  <strong>${emp.firstName} ${emp.lastName}</strong>
-                  <div>${t('form').department}: ${emp.department}</div>
-                  <div>${t('form').position}: ${emp.position}</div>
-                  <div style="margin-top:8px;">
-                    <button @click=${() => Router.go(`/edit/${emp.id}`)}>✎</button>
-                    <button @click=${() => this._delete(emp.id)}>🗑</button>
-                  </div>
+              <div class="card">
+                <div><strong>${t('form').firstName}:</strong> ${emp.firstName}</div>
+                <div><strong>${t('form').lastName}:</strong> ${emp.lastName}</div>
+                <div><strong>${t('form').employmentDate}:</strong> ${emp.employmentDate}</div>
+                <div><strong>${t('form').birthDate}:</strong> ${emp.birthDate}</div>
+                <div><strong>${t('form').phone}:</strong> ${emp.phone}</div>
+                <div><strong>${t('form').email}:</strong> ${emp.email}</div>
+                <div><strong>${t('form').department}:</strong> ${emp.department}</div>
+                <div><strong>${t('form').position}:</strong> ${emp.position}</div>
+                <div class="actions">
+                  <button class="edit" @click=${() => Router.go(`/edit/${emp.id}`)}>✎ ${t('edit')}</button>
+                  <button class="delete" @click=${() => this._delete(emp.id)}>🗑 ${t('delete')}</button>
                 </div>
+              </div>
               `)}
             </div>
           `}

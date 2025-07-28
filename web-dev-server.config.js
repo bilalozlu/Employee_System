@@ -17,7 +17,6 @@ export default {
   plugins: [
     legacyPlugin({
       polyfills: {
-        // Manually imported in index.html file
         webcomponents: false,
       },
     }),
