@@ -30,6 +30,7 @@
   "author": "bilal.ozlu",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
     "@vaadin/router": "^2.0.0",
     "lit": "^3.2.0",
     "lit-element": "^4.2.1",
