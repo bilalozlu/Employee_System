@@ -1,8 +1,6 @@
 const messages = {
     en: {
       list:      'List',
-      add:       'Add Employee',
-      edit:      'Edit',
       delConfirm:'Are you sure you want to delete this employee?',
       headers: [
         'First Name','Last Name','Date of Employment','Date of Birth',
@@ -22,12 +20,10 @@ const messages = {
     },
     tr: {
       list:      'Liste',
-      add:       'Yeni Çalışan',
-      edit:      'Düzenle',
       delConfirm:'Bu çalışanı silmek istediğinize emin misiniz?',
       headers: [
         'Ad','Soyad','İşe Giriş Tarihi','Doğum Tarihi',
-        'Telefon','E-posta','Departman','Pozisyon','Eylemler'
+        'Telefon','E-posta','Bölüm','Pozisyon','İşlemler'
       ],
       form: {
         firstName:       'Ad',
@@ -36,8 +32,8 @@ const messages = {
         birthDate:       'Doğum Tarihi',
         phone:           'Telefon',
         email:           'E-posta',
-        department:      'Departman',
-        position:        'Pozisyon',
+        department:      'Bölüm',
+        position:        'İşlemler',
         save:            'Kaydet',
       }
     }

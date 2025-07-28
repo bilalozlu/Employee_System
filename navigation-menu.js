@@ -3,13 +3,13 @@ import { Router } from '@vaadin/router';
 
 const translations = {
   en: {
-    list: 'List',
+    list: 'Employee List',
     add: 'Add Employee',
     switchTo: 'Türkçe',
   },
   tr: {
-    list: 'Liste',
-    add: 'Yeni Çalışan',
+    list: 'Çalışan Listesi',
+    add: 'Çalışan Ekle',
     switchTo: 'English',
   }
 };
@@ -29,12 +29,10 @@ export class NavigationMenu extends LitElement {
 
   constructor() {
     super();
-    // initialize from <html lang="…">
     this.lang = document.documentElement.lang || 'en';
   }
 
   firstUpdated() {
-    // re-render active link on navigation
     window.addEventListener('vaadin-router-location-changed', () => this.requestUpdate());
   }
 
@@ -43,7 +41,6 @@ export class NavigationMenu extends LitElement {
   }
 
   _toggleLang() {
-    // flip the lang attribute and re-render
     this.lang = this.lang === 'en' ? 'tr' : 'en';
     document.documentElement.lang = this.lang;
     window.dispatchEvent(new CustomEvent('lang-changed', { detail: { lang: this.lang } }));
